@@ -11,18 +11,18 @@ RSpec.describe "Students", type: :request do
   let!(:first_student) { Student.first }
   let!(:second_student) { Student.second }
 
-  describe "GET /students/:id" do
-    it 'returns the first student' do
-      get "/students/#{first_student.id}"
-
-      expect(response.body).to include_json({
-        id: a_kind_of(Integer),
-        first_name: 'Dwayne', 
-        last_name: 'Johnson', 
-        grade: 99
-      })
+  describe 'GET /students/:id' do
+    let!(:student) { FactoryBot.create(:student) }
+  
+    it 'renders the student details' do
+      get "/students/#{student.id}"
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(student.name)
+      expect(response.body).to include(student.age.to_s)
+      expect(response.body).to include(student.grade)
     end
-
+  end
+  
     it 'returns the second student' do
       get "/students/#{second_student.id}"
 
